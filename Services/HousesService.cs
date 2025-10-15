@@ -29,6 +29,7 @@ public class HousesService
         return house;
     }
 
+    //SECTION this area is completeing a lot of the author logic/validation for us, so we don't have to do so in the repository or controller.
     internal House Update(int houseId, House houseData, Account userInfo)
     {
         House house = GetById(houseId);

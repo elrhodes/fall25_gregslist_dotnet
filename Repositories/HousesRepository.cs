@@ -69,7 +69,7 @@ public class HousesRepository
         }, houseData).SingleOrDefault();
         return house;
     }
-
+    //SECTION In this section, we do not need to do the auth0 select statements because we already did the author verification in the service layer.
     internal void Update(House houseData)
     {
         string sql = @"
@@ -103,4 +103,5 @@ public class HousesRepository
             throw new Exception(rowsAffected + " rows of data are now gone and that is not good!");
         }
     }
+    //!SECTION 
 }
