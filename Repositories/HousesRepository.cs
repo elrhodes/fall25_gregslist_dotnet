@@ -46,4 +46,26 @@ public class HousesRepository
         }, param).SingleOrDefault();
         return house;
     }
+    internal House Create(House houseData)
+    {
+        string sql = @"
+        INSERT INTO houses
+        ( price, img_Url, description, bedrooms, bathrooms, sqft, creator_id)
+        VALUES
+        ( @Price, @ImgUrl, @Description, @Bedrooms, @Bathrooms, @SqFt, @CreatorId);
+
+        SELECT 
+        houses.*, 
+        accounts.*
+        FROM houses
+        JOIN accounts ON houses.creator_id = accounts.id
+        WHERE houses.id = LAST_INSERT_ID();
+        ";
+        House house = _db.Query(sql, (House house, Profile profile) =>
+        {
+            house.Creator = profile;
+            return house;
+        }, houseData).SingleOrDefault();
+        return house;
+    }
 }

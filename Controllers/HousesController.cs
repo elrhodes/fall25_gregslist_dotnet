@@ -41,4 +41,20 @@ public class HousesController : ControllerBase
         }
 
     }
+    [HttpPost]
+    [Authorize]
+    public async Task<ActionResult<House>> Create([FromBody] House houseData)
+    {
+        try
+        {
+            Account userInfo = await _auth.GetUserInfoAsync<Account>(HttpContext);
+            houseData.CreatorId = userInfo.Id;
+            House house = _housesService.Create(houseData);
+            return Ok(house);
+        }
+        catch (Exception e)
+        {
+            return BadRequest(e.Message);
+        }
+    }
 }

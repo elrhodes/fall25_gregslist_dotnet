@@ -7,7 +7,6 @@ public class House
     public int Id { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
-    [Range(1800, 2026)] public int? Year { get; set; }
     [Range(0, 100000000)] public int? Price { get; set; }
     [Url, MaxLength(500)] public string ImgUrl { get; set; }
     [MaxLength(500)] public string Description { get; set; }
