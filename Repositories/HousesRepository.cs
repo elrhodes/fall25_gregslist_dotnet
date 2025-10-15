@@ -1,3 +1,4 @@
+
 namespace gregslist_api_dotnet.Repositories;
 
 public class HousesRepository
@@ -17,11 +18,32 @@ public class HousesRepository
         FROM houses h
         JOIN accounts a ON h.creator_id = a.id;
         ";
-        List<House> houses = _db.Query<House, Profile, House>(sql, (house, profile) =>
+        // SECTION Dapper multi-mapping: here we are defining how the data is coming back from the query and how to map it to our models. It MUST be in the same order as the SELECT statement above. 
+        List<House> houses = _db.Query(sql, (House house, Profile profile) =>
         {
             house.Creator = profile;
             return house;
         }).ToList();
         return houses;
+    }
+    // !SECTION
+
+    internal House GetById(int houseId)
+    {
+        string sql = @"
+        SELECT
+        h.*,
+        a.*
+        FROM houses h
+        JOIN accounts a ON h.creator_id = a.id
+        WHERE h.id = @HouseId;
+        ";
+        object param = new { HouseId = houseId };
+        House house = _db.Query(sql, (House house, Profile profile) =>
+        {
+            house.Creator = profile;
+            return house;
+        }, param).SingleOrDefault();
+        return house;
     }
 }
