@@ -1,4 +1,5 @@
 
+
 namespace gregslist_api_dotnet.Repositories;
 
 public class HousesRepository
@@ -67,5 +68,39 @@ public class HousesRepository
             return house;
         }, houseData).SingleOrDefault();
         return house;
+    }
+
+    internal void Update(House houseData)
+    {
+        string sql = @"
+        UPDATE houses
+        SET
+            price = @Price,
+            img_url = @ImgUrl,
+            description = @Description,
+            bedrooms = @Bedrooms,
+            bathrooms = @Bathrooms,
+            sqft = @SqFt
+        WHERE id = @Id;
+            ";
+        int rowsAffected = _db.Execute(sql, houseData);
+        if (rowsAffected != 1)
+        {
+            throw new Exception(rowsAffected + " rows of data are now gone and that is not good!");
+        }
+    }
+
+    internal void Delete(int houseId)
+    {
+        string sql = "DELETE FROM houses WHERE id = @HouseId LIMIT 1;";
+
+        object param = new { HouseId = houseId };
+
+        int rowsAffected = _db.Execute(sql, param);
+
+        if (rowsAffected != 1)
+        {
+            throw new Exception(rowsAffected + " rows of data are now gone and that is not good!");
+        }
     }
 }
